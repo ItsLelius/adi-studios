@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { PageKey } from "../../types";
+import type { CurrentUser, PageKey, SidebarItem } from "../../types";
 import { Sidebar } from "./Sidebar";
 
 type AppShellProps = {
@@ -7,6 +7,8 @@ type AppShellProps = {
   onCloseSidebar: () => void;
   activePage: PageKey;
   onPageChange: (page: PageKey) => void;
+  sidebarItems: SidebarItem[];
+  currentUser: CurrentUser;
   children: ReactNode;
 };
 
@@ -15,6 +17,8 @@ export function AppShell({
   onCloseSidebar,
   activePage,
   onPageChange,
+  sidebarItems,
+  currentUser,
   children,
 }: AppShellProps) {
   return (
@@ -24,9 +28,11 @@ export function AppShell({
         onClose={onCloseSidebar}
         activePage={activePage}
         onPageChange={onPageChange}
+        items={sidebarItems}
+        currentUser={currentUser}
       />
 
-      <main className="h-screen flex-1 overflow-y-auto p-4 sm:p-5 lg:p-8">
+      <main className="h-screen min-w-0 flex-1 overflow-y-auto p-4 sm:p-5 lg:p-8">
         {children}
       </main>
     </div>

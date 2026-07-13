@@ -188,35 +188,34 @@ export const contentIdeas: ContentIdea[] = [
 export const assetItems: AssetItem[] = [
   {
     id: "a1",
-    title: "Maya Character Reference Grid",
+    title: "Maya CCOS Brain PDF",
     brand: "Maya's Kitchen",
-    category: "Character Reference",
-    type: "image",
+    category: "pdf_brain",
+    type: "pdf",
     fileUrl: "https://drive.google.com/example",
-    description:
-      "Main Maya character reference image used for consistent generation.",
+    description: "Main production brain PDF for Maya's Kitchen.",
     uploadedAt: "Jul 13, 2026",
   },
   {
     id: "a2",
-    title: "Maya Kitchen Prompt Brain PDF",
+    title: "Maya Character Lock Prompt",
     brand: "Maya's Kitchen",
-    category: "Prompt System",
-    type: "pdf",
-    fileUrl: "https://drive.google.com/example",
-    description:
-      "Production prompt rules, character lock, and workflow reference.",
+    category: "prompts",
+    type: "prompt",
+    content:
+      "Use MAYA REFERENCE / CHARACTER LOCK. Native 9:16 vertical. Keep Maya identical across every scene. Food is the hero. No text, subtitles, watermark, or extra characters.",
+    description: "Reusable character lock prompt for Maya generation.",
     uploadedAt: "Jul 13, 2026",
   },
   {
     id: "a3",
-    title: "Maya Cookbook Page Sample",
+    title: "Maya Reference Grid",
     brand: "Maya's Kitchen",
-    category: "Cookbook Asset",
+    category: "images",
     type: "image",
-    fileUrl: "https://drive.google.com/example",
-    description:
-      "Reference image for cookbook page layout and visual direction.",
+    imageUrl: "https://placehold.co/800x1000/png",
+    fileUrl: "https://placehold.co/800x1000/png",
+    description: "Main Maya visual reference grid.",
     uploadedAt: "Jul 13, 2026",
   },
 ];

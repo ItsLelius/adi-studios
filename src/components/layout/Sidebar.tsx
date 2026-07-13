@@ -1,13 +1,14 @@
+import { ChevronDown, LogOut, X } from "lucide-react";
 import { useState } from "react";
-import { ChevronDown, LogOut, PanelLeftClose, User, X } from "lucide-react";
-import { mainSidebarItems } from "../../constants/sidebar";
-import type { PageKey } from "../../types";
+import type { CurrentUser, PageKey, SidebarItem } from "../../types";
 
 type SidebarProps = {
   isOpen: boolean;
   onClose: () => void;
   activePage: PageKey;
   onPageChange: (page: PageKey) => void;
+  items: SidebarItem[];
+  currentUser: CurrentUser;
 };
 
 export function Sidebar({
@@ -15,6 +16,8 @@ export function Sidebar({
   onClose,
   activePage,
   onPageChange,
+  items,
+  currentUser,
 }: SidebarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -23,131 +26,136 @@ export function Sidebar({
     onClose();
   }
 
-  const sidebarBody = (
-    <div className="flex h-full w-full flex-col px-4 py-5">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#0B0D10]">
-            <span className="text-sm font-black text-white">AS</span>
-          </div>
-
-          <div className="min-w-0">
-            <h1 className="truncate text-base font-bold text-white">
-              Adi Studios
-            </h1>
-            <p className="truncate text-xs text-slate-500">Production HQ</p>
-          </div>
-        </div>
-
-        <button
-          onClick={onClose}
-          className="rounded-lg p-2 text-slate-500 transition hover:bg-white/5 hover:text-white lg:hidden"
-          aria-label="Close sidebar"
-        >
-          <X className="h-4 w-4" />
-        </button>
-
-        <button
-          className="hidden rounded-lg p-2 text-slate-500 transition hover:bg-white/5 hover:text-white lg:block"
-          aria-label="Collapse sidebar"
-        >
-          <PanelLeftClose className="h-4 w-4" />
-        </button>
-      </div>
-
-      <nav className="flex-1 space-y-1" aria-label="Admin navigation">
-        {mainSidebarItems.map((item) => {
-          const Icon = item.icon;
-          const active = activePage === item.key;
-
-          return (
-            <button
-              key={item.key}
-              onClick={() => handlePageChange(item.key)}
-              className={[
-                "group relative flex w-full items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-sm font-medium transition",
-                active
-                  ? "bg-white/5 text-white"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white",
-              ].join(" ")}
-            >
-              {active && (
-                <>
-                  <span className="absolute right-0 h-8 w-1 rounded-l-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.9)]" />
-                  <span className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-violet-500/10 to-transparent" />
-                </>
-              )}
-
-              <Icon className="relative z-10 h-4 w-4 shrink-0" />
-              <span className="relative z-10 truncate">{item.label}</span>
-            </button>
-          );
-        })}
-      </nav>
-
-      <div className="relative border-t border-white/5 pt-4">
-        {profileOpen && (
-          <div className="absolute bottom-full left-0 right-0 mb-2 rounded-2xl border border-white/5 bg-[#171A21] p-2 shadow-2xl shadow-black/40">
-            <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white">
-              <User className="h-4 w-4" />
-              My Profile
-            </button>
-
-            <button
-              onClick={() => alert("Logout clicked")}
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-300 transition hover:bg-red-500/10 hover:text-red-200"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </button>
-          </div>
-        )}
-
-        <button
-          onClick={() => setProfileOpen((current) => !current)}
-          className="flex w-full items-center justify-between rounded-2xl border border-white/5 bg-[#171A21] p-3 transition hover:bg-[#1E222B]"
-        >
-          <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
-              A
-            </div>
-
-            <div className="min-w-0 text-left">
-              <p className="truncate text-sm font-semibold text-white">Adi</p>
-              <p className="truncate text-xs text-slate-500">Admin</p>
-            </div>
-          </div>
-
-          <ChevronDown
-            className={[
-              "h-4 w-4 shrink-0 text-slate-500 transition",
-              profileOpen ? "rotate-180" : "",
-            ].join(" ")}
-          />
-        </button>
-      </div>
-    </div>
-  );
-
   return (
     <>
-      <aside className="hidden h-screen w-[280px] shrink-0 border-r border-white/5 bg-[#111318] lg:flex">
-        {sidebarBody}
-      </aside>
+      <div
+        className={[
+          "fixed inset-0 z-40 bg-black/60 transition lg:hidden",
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0",
+        ].join(" ")}
+        onClick={onClose}
+      />
 
-      {isOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <button
-            aria-label="Close sidebar overlay"
-            onClick={onClose}
-            className="absolute inset-0 bg-black/60"
-          />
+      <aside
+        className={[
+          "fixed inset-y-0 left-0 z-50 flex w-[304px] flex-col border-r border-white/10 bg-[#111318] transition-transform lg:static lg:translate-x-0",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+        ].join(" ")}
+      >
+        <div className="flex h-full min-h-0 flex-col p-4">
+          <div className="mb-7 flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-[#0B0D10] text-sm font-black text-white">
+              AS
+            </div>
 
-          <aside className="absolute left-0 top-0 h-screen w-[280px] max-w-[85vw] border-r border-white/5 bg-[#111318] shadow-2xl">
-            {sidebarBody}
-          </aside>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-base font-black text-white">
+                Adi Studios
+              </p>
+              <p className="truncate text-xs text-slate-500">Production HQ</p>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="rounded-lg p-2 text-slate-500 transition hover:bg-white/5 hover:text-white lg:hidden"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <nav className="scroll-panel min-h-0 flex-1 overflow-y-auto pr-1">
+            <div className="space-y-1.5">
+              {items.map((item) => {
+                const Icon = item.icon;
+                const active = activePage === item.key;
+
+                return (
+                  <button
+                    key={item.key}
+                    onClick={() => handlePageChange(item.key)}
+                    className={[
+                      "group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-bold transition",
+                      active
+                        ? "bg-gradient-to-r from-blue-500/18 via-violet-500/12 to-transparent text-white"
+                        : "text-slate-400 hover:bg-white/[0.04] hover:text-white",
+                    ].join(" ")}
+                  >
+                    <Icon
+                      className={[
+                        "h-4.5 w-4.5 shrink-0 transition",
+                        active ? "text-white" : "text-slate-500",
+                      ].join(" ")}
+                    />
+
+                    <span className="min-w-0 flex-1 truncate">
+                      {item.label}
+                    </span>
+
+                    {active && (
+                      <span className="h-7 w-1 rounded-full bg-blue-500" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+
+          <div className="mt-4 border-t border-white/10 pt-4">
+            {profileOpen && (
+              <div className="mb-3 overflow-hidden rounded-xl border border-white/10 bg-[#0B0D10] p-2">
+                <button
+                  onClick={() => handlePageChange("profile")}
+                  className="w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white"
+                >
+                  My Profile
+                </button>
+
+                <button
+                  onClick={() => alert("Later: logout")}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-semibold text-red-300 transition hover:bg-red-500/10"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              </div>
+            )}
+
+            <button
+              onClick={() => setProfileOpen((value) => !value)}
+              className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-[#171A21] p-3 text-left transition hover:bg-[#1E222B]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500 text-sm font-black text-white">
+                {getInitials(currentUser.name)}
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-black text-white">
+                  {currentUser.name}
+                </p>
+                <p className="truncate text-xs capitalize text-slate-500">
+                  {currentUser.role}
+                </p>
+              </div>
+
+              <ChevronDown
+                className={[
+                  "h-4 w-4 text-slate-500 transition",
+                  profileOpen ? "rotate-180" : "",
+                ].join(" ")}
+              />
+            </button>
+          </div>
         </div>
-      )}
+      </aside>
     </>
   );
+}
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }

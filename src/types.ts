@@ -1,14 +1,25 @@
 import type { LucideIcon } from "lucide-react";
 
+export type UserRole = "admin" | "employee";
+
+export type CurrentUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+};
+
 export type PageKey =
   | "dashboard"
-  | "tasks"
+  | "todo"
+  | "production"
   | "calendar"
   | "ready"
   | "published"
   | "ideas"
   | "assets"
-  | "employees";
+  | "employees"
+  | "profile";
 
 export type TaskStatus =
   | "to_generate"
@@ -94,15 +105,34 @@ export type ContentIdea = {
   createdAt: string;
 };
 
-export type AssetType = "pdf" | "image" | "doc";
+export type AssetType = "pdf" | "prompt" | "image" | "doc";
+
+export type AssetCategory = "pdf_brain" | "prompts" | "images" | "documents";
 
 export type AssetItem = {
   id: string;
   title: string;
   brand: string;
-  category: string;
+  category: AssetCategory;
   type: AssetType;
-  fileUrl: string;
+  content?: string;
+  fileUrl?: string;
+  imageUrl?: string;
   description: string;
   uploadedAt: string;
+};
+
+export type ToDoStatus = "assigned" | "in_progress" | "done";
+
+export type ToDoItem = {
+  id: string;
+  title: string;
+  brand: string;
+  assignee: string;
+  status: ToDoStatus;
+  caption: string;
+  promptA: string;
+  promptB: string;
+  notes?: string;
+  createdAt: string;
 };
